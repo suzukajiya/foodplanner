@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RecipeType {
+  CHICKEN
+  MEAT
+  VEGETARIAN
+  LENTIL
+  FISH
+  OTHER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Cost {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Season {
+  SUMMER
+  WINTER
+  SPRING
+  AUTUMN
+  ALL
+}
+
+enum MealTime {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Recipe {
+  id                     String              @id @default(uuid())
+  name                   String
+  description            String?
+  type                   RecipeType
+  difficulty             Difficulty
+  cost                   Cost
+  seasons                Season[]
+  timings                MealTime[]
+  createdAt              DateTime            @default(now()) @map("created_at")
+  updatedAt              DateTime            @updatedAt @map("updated_at")
+  recipeIngredients      RecipeIngredient[]
+  planItems              PlanItem[]
+  recommendationHistory  RecommendationHistory[]
+
+  @@map("recipes")
+}
+
+model Ingredient {
+  id                String              @id @default(uuid())
+  name              String              @unique
+  defaultUnit       String?             @map("default_unit")
+  recipeIngredients RecipeIngredient[]
+
+  @@map("ingredients")
+}
+
+model RecipeIngredient {
+  id           String      @id @default(uuid())
+  recipeId     String      @map("recipe_id")
+  ingredientId String      @map("ingredient_id")
+  quantity     Float
+  unit         String
+  recipe       Recipe      @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient   Ingredient  @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  @@map("recipe_ingredients")
+}
+
+model WeeklyPlan {
+  id            String     @id @default(uuid())
+  weekStartDate DateTime   @unique @map("week_start_date") @db.Date
+  createdAt     DateTime   @default(now()) @map("created_at")
+  planItems     PlanItem[]
+
+  @@map("weekly_plans")
+}
+
+model PlanItem {
+  id         String     @id @default(uuid())
+  planId     String     @map("plan_id")
+  recipeId   String     @map("recipe_id")
+  dayOfWeek  DayOfWeek  @map("day_of_week")
+  mealType   MealTime   @map("meal_type")
+  plan       WeeklyPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("plan_items")
+}
+
+model RecommendationHistory {
+  id            String   @id @default(uuid())
+  recipeId      String   @map("recipe_id")
+  weekStartDate DateTime @map("week_start_date") @db.Date
+  createdAt     DateTime @default(now()) @map("created_at")
+  recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("recommendation_history")
+}
