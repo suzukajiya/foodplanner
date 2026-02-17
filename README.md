@@ -108,6 +108,21 @@ The client will start on **http://localhost:5173**
 
 ## Available Scripts
 
+### Root Commands (from project root)
+
+| Command               | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `npm run dev`         | Run server + client together (colored output)   |
+| `npm run start`       | Run migrations, seed, then start dev servers    |
+| `npm run setup`       | Run migrations + seed database                  |
+| `npm run docker:up`   | Start PostgreSQL container                      |
+| `npm run docker:down` | Stop PostgreSQL container                       |
+| `npm run db:migrate`  | Run Prisma migrations                           |
+| `npm run db:seed`     | Seed database with dummy data                   |
+| `npm run db:studio`   | Open Prisma Studio                              |
+| `npm run install:all` | Install all dependencies (root + server + client) |
+| `npm run build`       | Build both server and client                    |
+
 ### Server (from `server/` directory)
 
 | Command                  | Description                          |
@@ -142,27 +157,29 @@ See `server/prisma/schema.prisma` for the complete schema definition.
 
 ## Development Workflow
 
-1. **Start Database:**
-   ```powershell
-   docker-compose up -d
-   ```
+### Quick Start (Fresh Setup)
 
-2. **Start Server (Terminal 1):**
-   ```powershell
-   cd server
-   npm run dev
-   ```
+```powershell
+# From project root
+npm run install:all    # Install everything
+npm run docker:up      # Start database
+npm run start          # Migrate, seed, and run dev servers
+```
 
-3. **Start Client (Terminal 2):**
-   ```powershell
-   cd client
-   npm run dev
-   ```
+### Daily Development
 
-4. **Access Application:**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000/api
-   - Prisma Studio: `npm run prisma:studio` (from server directory)
+```powershell
+npm run docker:up      # If DB not running
+npm run dev            # Start server (port 3000) + client (port 5173)
+```
+
+The terminal will show color-coded output: **blue** for server, **green** for client.
+
+### Access Application
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3000/api
+- Prisma Studio: `npm run db:studio`
 
 ## Current Pages
 

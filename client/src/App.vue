@@ -1,26 +1,35 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <nav class="bg-white shadow-sm">
+  <div class="min-h-screen bg-surface">
+    <nav class="sticky top-0 z-20 border-b border-primary/10 bg-white/95 backdrop-blur">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex space-x-8">
-            <RouterLink to="/" class="inline-flex items-center px-1 pt-1 text-gray-900 font-semibold">
-              FoodPlanner
+        <div class="flex h-16 items-center justify-between">
+          <RouterLink to="/" class="inline-flex items-center gap-2 text-xl font-heading text-primary">
+            <i class="bi bi-calendar-heart"></i>
+            FoodPlanner
+          </RouterLink>
+
+          <div class="flex flex-wrap items-center gap-5 text-sm">
+            <RouterLink to="/" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
+              Home
             </RouterLink>
-            <RouterLink to="/recipes" class="inline-flex items-center px-1 pt-1 text-gray-600 hover:text-gray-900">
+            <RouterLink to="/recipes" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
               Recipes
             </RouterLink>
-            <RouterLink to="/add-recipe" class="inline-flex items-center px-1 pt-1 text-gray-600 hover:text-gray-900">
+            <RouterLink to="/add-recipe" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
               Add Recipe
             </RouterLink>
-            <RouterLink to="/weekly-plan" class="inline-flex items-center px-1 pt-1 text-gray-600 hover:text-gray-900">
+            <RouterLink to="/weekly-plan" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
               Weekly Plan
+            </RouterLink>
+            <RouterLink to="/showcase" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
+              Showcase
             </RouterLink>
           </div>
         </div>
       </div>
     </nav>
-    <main>
+
+    <main class="pb-12">
       <RouterView />
     </main>
   </div>

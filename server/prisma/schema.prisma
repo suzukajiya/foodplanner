@@ -57,6 +57,9 @@ model Recipe {
   id                     String              @id @default(uuid())
   name                   String
   description            String?
+  author                 String?
+  comment                String?
+  servingSize            Int                 @default(1) @map("serving_size")
   type                   RecipeType
   difficulty             Difficulty
   cost                   Cost
