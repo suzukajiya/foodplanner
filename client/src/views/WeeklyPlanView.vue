@@ -12,7 +12,7 @@
     <div v-if="!generatedPlan" class="space-y-6">
 
       <!-- Food Type Weights -->
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-2xl">
             <i class="bi bi-sliders mr-2 text-primary"></i>Food Type Weights
@@ -27,7 +27,7 @@
           <div
             v-for="tw in typeWeights"
             :key="tw.type"
-            class="flex items-center gap-4 rounded-xl border p-4 transition"
+            class="flex items-center gap-4 border p-4 transition"
             :class="tw.weight > 0 ? 'border-primary/30 bg-primary/5' : 'border-primary/10 bg-surface'"
           >
             <div class="flex-1">
@@ -38,7 +38,7 @@
                 min="0"
                 max="100"
                 step="5"
-                class="mt-2 w-full h-2 rounded-lg appearance-none cursor-pointer accent-primary bg-primary/20"
+                class="weight-slider mt-2 w-full h-2 cursor-pointer"
               />
             </div>
             <div class="flex items-center gap-1">
@@ -48,7 +48,7 @@
                 min="0"
                 max="100"
                 step="5"
-                class="w-16 rounded-lg border border-primary/25 bg-white px-2 py-1.5 text-center text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                class="w-16 border border-primary/25 bg-white px-2 py-1.5 text-center text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
               <span class="text-sm text-ink/50">%</span>
             </div>
@@ -75,7 +75,7 @@
       </div>
 
       <!-- Filters -->
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
         <h2 class="mb-6 text-2xl">
           <i class="bi bi-funnel mr-2 text-primary"></i>Filters
         </h2>
@@ -168,7 +168,7 @@
       </div>
 
       <!-- Summary & Generate -->
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="text-sm text-ink/60">
             <p><i class="bi bi-calendar-range mr-2 text-primary"></i><strong>{{ remainingDaysCount }} days</strong> remaining this week ({{ remainingDaysLabel }})</p>
@@ -229,7 +229,7 @@
       </p>
 
       <!-- Stats Bar -->
-      <div v-if="generatedPlan.stats.typeBreakdown" class="mb-6 rounded-2xl bg-white p-4 border border-primary/10 shadow-sm">
+      <div v-if="generatedPlan.stats.typeBreakdown" class="mb-6 bg-white p-4 border border-primary/10 shadow-sm">
         <div class="flex flex-wrap items-center gap-4 text-sm">
           <span class="text-ink/50">
             <i class="bi bi-database mr-1"></i>{{ generatedPlan.stats.totalMatching }} matching recipes found
@@ -246,7 +246,7 @@
         </div>
       </div>
 
-      <div v-if="generatedPlan.message" class="mb-6 rounded-2xl bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800">
+      <div v-if="generatedPlan.message" class="mb-6 bg-yellow-50 border border-yellow-200 p-4 text-sm text-yellow-800">
         <i class="bi bi-info-circle mr-2"></i>{{ generatedPlan.message }}
       </div>
 
@@ -255,7 +255,7 @@
         <div
           v-for="(day, dayIndex) in generatedPlan.plan"
           :key="day.day"
-          class="rounded-2xl bg-white border border-primary/10 shadow-sm overflow-hidden"
+          class="bg-white border border-primary/10 shadow-sm overflow-hidden"
         >
           <div class="flex items-center gap-3 bg-primary/5 px-6 py-3 border-b border-primary/10">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white text-sm font-bold">
@@ -277,33 +277,80 @@
             <div
               v-for="meal in day.meals"
               :key="meal.mealTime"
-              class="flex items-center gap-4 px-6 py-4 transition hover:bg-surface"
             >
-              <div class="w-20 shrink-0">
-                <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
-                  {{ formatEnum(meal.mealTime) }}
-                </span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <RouterLink
-                  :to="`/recipes/${meal.recipe.id}`"
-                  class="font-medium text-ink hover:text-primary transition"
-                >
-                  {{ meal.recipe.name }}
-                </RouterLink>
-                <div class="mt-1 flex items-center gap-3 text-xs text-ink/50">
-                  <span><i class="bi bi-tag mr-1"></i>{{ formatEnum(meal.recipe.type) }}</span>
-                  <span><i class="bi bi-speedometer2 mr-1"></i>{{ formatEnum(meal.recipe.difficulty) }}</span>
-                  <span><i class="bi bi-people mr-1"></i>{{ meal.recipe.servingSize }} serving{{ meal.recipe.servingSize > 1 ? 's' : '' }}</span>
+              <div class="flex items-center gap-4 px-6 py-4 transition hover:bg-surface">
+                <div class="w-20 shrink-0">
+                  <span class="rounded-full bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
+                    {{ formatEnum(meal.mealTime) }}
+                  </span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <RouterLink
+                      :to="`/recipes/${meal.recipe.id}`"
+                      class="font-medium text-ink hover:text-primary transition"
+                    >
+                      {{ meal.recipe.name }}
+                    </RouterLink>
+                    <span v-if="meal.recipe.code" class="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-semibold tracking-wider text-primary">#{{ meal.recipe.code }}</span>
+                  </div>
+                  <div class="mt-1 flex items-center gap-3 text-xs text-ink/50">
+                    <span><i class="bi bi-tag mr-1"></i>{{ formatEnum(meal.recipe.type) }}</span>
+                    <span><i class="bi bi-speedometer2 mr-1"></i>{{ formatEnum(meal.recipe.difficulty) }}</span>
+                    <span><i class="bi bi-people mr-1"></i>{{ meal.recipe.servingSize }} serving{{ meal.recipe.servingSize > 1 ? 's' : '' }}</span>
+                  </div>
+                </div>
+                <div class="flex shrink-0 items-center gap-1">
+                  <button
+                    @click="swapRecipe(dayIndex, meal.mealTime)"
+                    class="p-2 text-ink/40 transition hover:bg-primary/10 hover:text-primary"
+                    title="Auto swap"
+                  >
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                  <button
+                    @click="toggleManualSwap(dayIndex, meal.mealTime)"
+                    class="p-2 transition"
+                    :class="manualSwapKey === `${dayIndex}-${meal.mealTime}`
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-ink/40 hover:bg-primary/10 hover:text-primary'"
+                    title="Swap by code"
+                  >
+                    <i class="bi bi-keyboard"></i>
+                  </button>
                 </div>
               </div>
-              <button
-                @click="swapRecipe(dayIndex, meal.mealTime)"
-                class="shrink-0 rounded-lg p-2 text-ink/40 transition hover:bg-primary/10 hover:text-primary"
-                title="Swap this recipe"
+
+              <!-- Manual swap input row -->
+              <div
+                v-if="manualSwapKey === `${dayIndex}-${meal.mealTime}`"
+                class="flex items-center gap-3 border-t border-primary/10 bg-primary/5 px-6 py-3"
               >
-                <i class="bi bi-arrow-repeat"></i>
-              </button>
+                <i class="bi bi-hash text-primary/60"></i>
+                <input
+                  v-model="manualSwapCode"
+                  type="text"
+                  maxlength="6"
+                  placeholder="Enter 6-digit code…"
+                  @keyup.enter="confirmManualSwap(dayIndex, meal.mealTime)"
+                  @keyup.esc="closeManualSwap"
+                  class="w-36 rounded border border-primary/30 bg-white px-3 py-1.5 font-mono text-sm tracking-widest text-ink placeholder-ink/30 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <button
+                  @click="confirmManualSwap(dayIndex, meal.mealTime)"
+                  :disabled="manualSwapLoading || manualSwapCode.length !== 6"
+                  class="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {{ manualSwapLoading ? '…' : 'Swap' }}
+                </button>
+                <button
+                  @click="closeManualSwap"
+                  class="text-ink/40 transition hover:text-ink/70"
+                >
+                  <i class="bi bi-x-lg text-sm"></i>
+                </button>
+                <span v-if="manualSwapError" class="text-xs text-red-500">{{ manualSwapError }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -314,7 +361,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { weeklyPlanApi } from '@/services/api'
+import { weeklyPlanApi, recipeApi } from '@/services/api'
 import {
   RecipeType, Season, Difficulty, Cost, MealTime
 } from '@/types/recipe.types'
@@ -345,6 +392,12 @@ const generatedPlan = ref<GeneratePlanResponse | null>(null)
 
 // Keep a copy of all matching recipes for the swap feature
 let allMatchingRecipes: any[] = []
+
+// Manual swap state
+const manualSwapKey = ref<string | null>(null)
+const manualSwapCode = ref('')
+const manualSwapLoading = ref(false)
+const manualSwapError = ref('')
 
 const totalWeight = computed(() =>
   typeWeights.value.reduce((sum, tw) => sum + tw.weight, 0)
@@ -477,6 +530,43 @@ const handleSave = async () => {
   }
 }
 
+const toggleManualSwap = (dayIndex: number, mealTime: MealTime) => {
+  const key = `${dayIndex}-${mealTime}`
+  if (manualSwapKey.value === key) {
+    closeManualSwap()
+  } else {
+    manualSwapKey.value = key
+    manualSwapCode.value = ''
+    manualSwapError.value = ''
+  }
+}
+
+const closeManualSwap = () => {
+  manualSwapKey.value = null
+  manualSwapCode.value = ''
+  manualSwapError.value = ''
+}
+
+const confirmManualSwap = async (dayIndex: number, mealTime: MealTime) => {
+  if (!generatedPlan.value || manualSwapCode.value.length !== 6) return
+  manualSwapLoading.value = true
+  manualSwapError.value = ''
+  try {
+    const res = await recipeApi.getByCode(manualSwapCode.value)
+    const meal = generatedPlan.value.plan[dayIndex]?.meals.find(m => m.mealTime === mealTime)
+    if (meal) {
+      meal.recipe = res.data
+    }
+    closeManualSwap()
+  } catch (err: any) {
+    manualSwapError.value = err.response?.status === 404
+      ? 'No recipe found with that code'
+      : 'Failed to fetch recipe'
+  } finally {
+    manualSwapLoading.value = false
+  }
+}
+
 const swapRecipe = async (dayIndex: number, mealTime: MealTime) => {
   if (!generatedPlan.value) return
 
@@ -513,3 +603,28 @@ const swapRecipe = async (dayIndex: number, mealTime: MealTime) => {
   }
 }
 </script>
+
+<style scoped>
+.weight-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(241, 96, 96, 0.2);
+}
+
+.weight-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #f8597eff;
+  cursor: pointer;
+}
+
+.weight-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #f8597eff;
+  border: none;
+  cursor: pointer;
+}
+</style>

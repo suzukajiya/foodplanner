@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getAllRecipes,
   getRecipeById,
+  getRecipeByCode,
   createRecipe,
   updateRecipe,
   deleteRecipe
@@ -10,6 +11,7 @@ import {
 const router = Router();
 
 router.get('/', getAllRecipes);
+router.get('/code/:code', getRecipeByCode);
 router.get('/:id', getRecipeById);
 router.post('/', createRecipe);
 router.put('/:id', updateRecipe);

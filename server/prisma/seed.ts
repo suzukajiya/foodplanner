@@ -77,6 +77,18 @@ function getRandomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const usedCodes = new Set<string>();
+
+function generateCode(): string {
+  while (true) {
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    if (!usedCodes.has(code)) {
+      usedCodes.add(code);
+      return code;
+    }
+  }
+}
+
 async function main() {
   console.log('Starting seed...');
 
@@ -84,7 +96,7 @@ async function main() {
   await prisma.recipeIngredient.deleteMany();
   await prisma.recipe.deleteMany();
   await prisma.ingredient.deleteMany();
-  
+
   console.log('Cleared existing data');
 
   // Create ingredients
@@ -104,7 +116,7 @@ async function main() {
   // Create 20 recipes
   for (let i = 0; i < recipeNames.length; i++) {
     const recipeName = recipeNames[i];
-    
+
     // Determine type based on recipe name
     let type: RecipeType;
     if (recipeName.toLowerCase().includes('chicken')) {
@@ -125,9 +137,10 @@ async function main() {
     const cost = getRandomElement([Cost.LOW, Cost.MEDIUM, Cost.HIGH]);
     const seasons = getRandomElements([Season.SUMMER, Season.WINTER, Season.SPRING, Season.AUTUMN, Season.ALL], getRandomInt(1, 3));
     const timings = getRandomElements([MealTime.BREAKFAST, MealTime.LUNCH, MealTime.DINNER, MealTime.SNACK], getRandomInt(1, 2));
-    
+
     const recipe = await prisma.recipe.create({
       data: {
+        code: generateCode(),
         name: recipeName,
         description: getRandomElement(descriptions),
         type,
@@ -162,6 +175,39 @@ async function main() {
     console.log(`Created recipe: ${recipeName}`);
   }
 
+  // Seed grocery items
+  const groceryItems = [
+    { name: 'Milk', size: '1 Liter' },
+    { name: 'Bread', size: '500 gram' },
+    { name: 'Eggs', size: '12 Pack' },
+    { name: 'Butter', size: '250 gram' },
+    { name: 'Cheddar Cheese', size: '400 gram' },
+    { name: 'Chicken Breast', size: '1 Kg' },
+    { name: 'Ground Beef', size: '500 gram' },
+    { name: 'Rice', size: '5 Kg' },
+    { name: 'Pasta', size: '500 gram' },
+    { name: 'Tomato Sauce', size: '400 gram' },
+    { name: 'Olive Oil', size: '750 ml' },
+    { name: 'Sugar', size: '1 Kg' },
+    { name: 'Salt', size: '1 Kg' },
+    { name: 'All-Purpose Flour', size: '1 Kg' },
+    { name: 'Coke', size: '1.5 Liter' },
+    { name: 'Orange Juice', size: '1 Liter' },
+    { name: 'Yogurt', size: '500 gram' },
+    { name: 'Potatoes', size: '3 Kg' },
+    { name: 'Onions', size: '1 Kg' },
+    { name: 'Tomatoes', size: '1 Kg' },
+  ];
+
+  for (const item of groceryItems) {
+    await prisma.groceryItem.upsert({
+      where: { name: item.name },
+      update: {},
+      create: item
+    });
+  }
+
+  console.log('Created grocery items');
   console.log('Seed completed successfully!');
 }
 

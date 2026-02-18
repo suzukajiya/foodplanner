@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import healthRoutes from './routes/health';
 import recipeRoutes from './routes/recipes';
 import weeklyPlanRoutes from './routes/weeklyPlan';
+import groceryRoutes from './routes/grocery';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/health', healthRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/weekly-plan', weeklyPlanRoutes);
+app.use('/api/grocery', groceryRoutes);
 
 app.use(errorHandler);
 

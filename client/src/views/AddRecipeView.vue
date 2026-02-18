@@ -1,14 +1,14 @@
 <template>
-  <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
     <div class="mb-8 flex items-center justify-between">
       <h1 class="text-4xl">{{ isEditMode ? 'Edit Recipe' : 'Add New Recipe' }}</h1>
-      <RouterLink :to="isEditMode ? `/recipes/${recipeId}` : '/recipes'" class="text-sm text-ink/70 transition hover:text-primary">
+      <RouterLink :to="isEditMode ? `/recipes/${recipeId}` : '/'" class="text-sm text-ink/70 transition hover:text-primary">
         <i class="bi bi-arrow-left mr-2"></i>{{ isEditMode ? 'Back to Recipe' : 'Back to Recipes' }}
       </RouterLink>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-8">
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
         <div class="lg:grid lg:grid-cols-2 lg:gap-8">
           <div>
             <h2 class="mb-6 text-2xl">Basic Information</h2>
@@ -99,7 +99,7 @@
                   id="type"
                   v-model="formData.type"
                   required
-                  class="block w-full rounded-lg border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  class="block w-full border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Select type</option>
                   <option v-for="type in RecipeType" :key="type" :value="type">{{ formatEnum(type) }}</option>
@@ -112,7 +112,7 @@
                   id="difficulty"
                   v-model="formData.difficulty"
                   required
-                  class="block w-full rounded-lg border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  class="block w-full border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Select difficulty</option>
                   <option v-for="difficulty in Difficulty" :key="difficulty" :value="difficulty">{{ formatEnum(difficulty) }}</option>
@@ -125,7 +125,7 @@
                   id="cost"
                   v-model="formData.cost"
                   required
-                  class="block w-full rounded-lg border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  class="block w-full border border-primary/25 bg-white px-4 py-2.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="">Select cost</option>
                   <option v-for="cost in Cost" :key="cost" :value="cost">{{ formatEnum(cost) }}</option>
@@ -176,20 +176,20 @@
         </div>
       </div>
 
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
         <div class="mb-6 flex items-center justify-between">
           <h2 class="text-2xl">Ingredients</h2>
           <button
             type="button"
             @click="addIngredient"
-            class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/20"
+            class="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/20"
           >
             <i class="bi bi-plus-circle"></i>
             Add Ingredient
           </button>
         </div>
 
-        <div v-if="formData.ingredients.length === 0" class="rounded-2xl border border-primary/15 bg-surface p-6 text-center text-sm text-ink/60">
+        <div v-if="formData.ingredients.length === 0" class="border border-primary/15 bg-surface p-6 text-center text-sm text-ink/60">
           <i class="bi bi-basket text-2xl text-primary/50"></i>
           <p class="mt-2">No ingredients added yet. Click "Add Ingredient" to start.</p>
         </div>
@@ -198,7 +198,7 @@
           <div
             v-for="(ingredient, index) in formData.ingredients"
             :key="index"
-            class="grid gap-3 rounded-2xl border border-primary/15 bg-surface p-4 md:grid-cols-[2fr_1fr_1fr_auto]"
+            class="grid gap-3 border border-primary/15 bg-surface p-4 md:grid-cols-[2fr_1fr_1fr_auto]"
           >
             <div class="relative z-0">
               <input
@@ -255,7 +255,7 @@
             <button
               type="button"
               @click="removeIngredient(index)"
-              class="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm text-primary/70 transition hover:bg-primary/10 hover:text-primary"
+              class="inline-flex items-center justify-center px-3 py-2 text-sm text-primary/70 transition hover:bg-primary/10 hover:text-primary"
             >
               <i class="bi bi-trash"></i>
             </button>
@@ -263,7 +263,7 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between gap-4 rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+      <div class="flex items-center justify-between rounded-md gap-4 bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
         <p v-if="errorMessage" class="text-sm text-red-600">
           <i class="bi bi-exclamation-triangle mr-2"></i>{{ errorMessage }}
         </p>

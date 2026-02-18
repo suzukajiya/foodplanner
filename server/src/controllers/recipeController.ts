@@ -4,6 +4,14 @@ import { CreateRecipeDto, UpdateRecipeDto } from '../types/recipe.types';
 
 const prisma = new PrismaClient();
 
+const generateUniqueCode = async (): Promise<string> => {
+  while (true) {
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const existing = await prisma.recipe.findUnique({ where: { code } });
+    if (!existing) return code;
+  }
+};
+
 export const getAllRecipes = async (req: Request, res: Response) => {
   try {
     const recipes = await prisma.recipe.findMany({
@@ -56,8 +64,11 @@ export const createRecipe = async (req: Request, res: Response) => {
   try {
     const data: CreateRecipeDto = req.body;
 
+    const code = await generateUniqueCode();
+
     const recipe = await prisma.recipe.create({
       data: {
+        code,
         name: data.name,
         description: data.description,
         author: data.author,
@@ -185,6 +196,27 @@ export const updateRecipe = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error updating recipe:', error);
     res.status(500).json({ error: 'Failed to update recipe' });
+  }
+};
+
+export const getRecipeByCode = async (req: Request, res: Response) => {
+  try {
+    const { code } = req.params;
+    const recipe = await prisma.recipe.findUnique({
+      where: { code },
+      include: {
+        recipeIngredients: {
+          include: { ingredient: true }
+        }
+      }
+    });
+    if (!recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+    res.json(recipe);
+  } catch (error) {
+    console.error('Error fetching recipe by code:', error);
+    res.status(500).json({ error: 'Failed to fetch recipe' });
   }
 };
 

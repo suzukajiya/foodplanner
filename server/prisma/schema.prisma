@@ -55,6 +55,7 @@ enum DayOfWeek {
 
 model Recipe {
   id                     String              @id @default(uuid())
+  code                   String?             @unique @map("code")
   name                   String
   description            String?
   author                 String?
@@ -124,4 +125,14 @@ model RecommendationHistory {
   recipe        Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("recommendation_history")
+}
+
+model GroceryItem {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  size      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("grocery_items")
 }

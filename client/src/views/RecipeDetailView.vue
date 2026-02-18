@@ -1,22 +1,22 @@
 <template>
-  <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div v-if="loading" class="rounded-3xl bg-white p-12 text-center shadow-soft">
+  <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div v-if="loading" class="bg-white p-12 text-center shadow-soft">
       <i class="bi bi-hourglass-split text-3xl text-primary/50"></i>
       <p class="mt-4 text-ink/60">Loading recipe...</p>
     </div>
 
-    <div v-else-if="error" class="rounded-3xl bg-white p-8 shadow-soft">
+    <div v-else-if="error" class="bg-white p-8 shadow-soft">
       <p class="text-sm text-red-600">
         <i class="bi bi-exclamation-triangle mr-2"></i>{{ error }}
       </p>
-      <RouterLink to="/recipes" class="btn-primary mt-4 inline-block">
+      <RouterLink to="/" class="btn-primary mt-4 inline-block">
         <i class="bi bi-arrow-left mr-2"></i>Back to Recipes
       </RouterLink>
     </div>
 
     <div v-else-if="recipe">
       <div class="mb-6 flex items-center justify-between">
-        <RouterLink to="/recipes" class="text-sm text-ink/70 transition hover:text-primary">
+        <RouterLink to="/" class="text-sm text-ink/70 transition hover:text-primary">
           <i class="bi bi-arrow-left mr-2"></i>Back to Recipes
         </RouterLink>
         <div class="flex gap-2">
@@ -29,7 +29,7 @@
           <button
             @click="handleDelete"
             :disabled="isDeleting"
-            class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
           >
             <i class="bi bi-trash"></i>
             {{ isDeleting ? 'Deleting...' : 'Delete' }}
@@ -37,89 +37,100 @@
         </div>
       </div>
 
-      <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h1 class="text-4xl text-ink">{{ recipe.name }}</h1>
-            <p v-if="recipe.author" class="mt-2 text-sm text-ink/60">
-              <i class="bi bi-person mr-1"></i>By {{ recipe.author }}
-            </p>
-            <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-ink/60">
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-primary">
-                <i class="bi bi-tag"></i>{{ formatEnum(recipe.type) }}
-              </span>
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
-                <i class="bi bi-speedometer2"></i>{{ formatEnum(recipe.difficulty) }}
-              </span>
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
-                <i class="bi bi-currency-dollar"></i>{{ formatEnum(recipe.cost) }}
-              </span>
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
-                <i class="bi bi-people"></i>{{ recipe.servingSize }} serving{{ recipe.servingSize > 1 ? 's' : '' }}
-              </span>
+      <div class="grid gap-6 lg:grid-cols-12">
+        <!-- Left Column: 7/12 -->
+        <div class="lg:col-span-7 bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-4xl text-ink">{{ recipe.name }}</h1>
+                <span v-if="recipe.code" class="rounded bg-primary/10 px-2 py-1 font-mono text-sm font-semibold tracking-widest text-primary">#{{ recipe.code }}</span>
+              </div>
+              <p v-if="recipe.author" class="mt-2 text-sm text-ink/60">
+                <i class="bi bi-person mr-1"></i>By {{ recipe.author }}
+              </p>
+              <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-ink/60">
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-primary">
+                  <i class="bi bi-tag"></i>{{ formatEnum(recipe.type) }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
+                  <i class="bi bi-speedometer2"></i>{{ formatEnum(recipe.difficulty) }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
+                  <i class="bi bi-currency-dollar"></i>{{ formatEnum(recipe.cost) }}
+                </span>
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1">
+                  <i class="bi bi-people"></i>{{ recipe.servingSize }} serving{{ recipe.servingSize > 1 ? 's' : '' }}
+                </span>
+              </div>
             </div>
+          </div>
+
+          <div v-if="recipe.comment" class="mt-4 bg-surface p-4 text-sm text-ink/70">
+            <i class="bi bi-chat-left-text mr-2 text-primary"></i>{{ recipe.comment }}
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-6">
+            <div>
+              <p class="text-xs font-medium uppercase tracking-wider text-ink/50">Seasons</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span
+                  v-for="season in recipe.seasons"
+                  :key="season"
+                  class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary"
+                >
+                  {{ formatEnum(season) }}
+                </span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs font-medium uppercase tracking-wider text-ink/50">Meal Times</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span
+                  v-for="timing in recipe.timings"
+                  :key="timing"
+                  class="rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs text-secondary"
+                >
+                  {{ formatEnum(timing) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <h2 class="mb-4 text-2xl">
+              <i class="bi bi-journal-text mr-2 text-primary"></i>Instructions
+            </h2>
+            <div
+              v-if="recipe.description"
+              class="prose prose-sm max-w-none text-ink/80"
+              v-html="recipe.description"
+            ></div>
+            <p v-else class="text-sm text-ink/50 italic">No instructions provided.</p>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-primary/10 text-xs text-ink/50">
+            <span>Created: {{ formatDate(recipe.createdAt) }}</span>
+            <span class="mx-3">•</span>
+            <span>Updated: {{ formatDate(recipe.updatedAt) }}</span>
           </div>
         </div>
 
-        <div v-if="recipe.comment" class="mt-4 rounded-lg bg-surface p-4 text-sm text-ink/70">
-          <i class="bi bi-chat-left-text mr-2 text-primary"></i>{{ recipe.comment }}
-        </div>
-
-        <div class="mt-6 flex flex-wrap gap-4">
-          <div>
-            <p class="text-xs font-medium uppercase tracking-wider text-ink/50">Seasons</p>
-            <div class="mt-2 flex flex-wrap gap-2">
-              <span
-                v-for="season in recipe.seasons"
-                :key="season"
-                class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary"
-              >
-                {{ formatEnum(season) }}
-              </span>
-            </div>
-          </div>
-          <div>
-            <p class="text-xs font-medium uppercase tracking-wider text-ink/50">Meal Times</p>
-            <div class="mt-2 flex flex-wrap gap-2">
-              <span
-                v-for="timing in recipe.timings"
-                :key="timing"
-                class="rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs text-secondary"
-              >
-                {{ formatEnum(timing) }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-6 grid gap-6 lg:grid-cols-2">
-        <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
-          <h2 class="mb-4 text-2xl">
-            <i class="bi bi-journal-text mr-2 text-primary"></i>Instructions
-          </h2>
-          <div
-            v-if="recipe.description"
-            class="prose prose-sm max-w-none text-ink/80"
-            v-html="recipe.description"
-          ></div>
-          <p v-else class="text-sm text-ink/50 italic">No instructions provided.</p>
-        </div>
-
-        <div class="rounded-2xl bg-white p-6 sm:p-8 border border-primary/10 shadow-sm">
+        <!-- Right Column: 5/12 -->
+        <div class="lg:col-span-5 bg-white rounded-md p-6 sm:p-8 border border-primary/10 shadow-sm h-fit">
           <div class="mb-4 flex items-center justify-between">
             <h2 class="text-2xl">
               <i class="bi bi-basket mr-2 text-primary"></i>Ingredients
             </h2>
           </div>
 
-          <div class="mb-4 flex items-center gap-3 rounded-lg bg-surface p-3">
+          <div class="mb-4 flex items-center gap-3 bg-surface p-3">
             <label class="text-sm font-medium text-ink/70">Adjust servings:</label>
             <div class="flex items-center gap-2">
               <button
                 type="button"
                 @click="adjustedServings = Math.max(1, adjustedServings - 1)"
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition hover:bg-primary/20"
+                class="flex h-8 w-8 items-center justify-center bg-primary/10 text-primary transition hover:bg-primary/20"
               >
                 <i class="bi bi-dash"></i>
               </button>
@@ -127,7 +138,7 @@
               <button
                 type="button"
                 @click="adjustedServings++"
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary transition hover:bg-primary/20"
+                class="flex h-8 w-8 items-center justify-center bg-primary/10 text-primary transition hover:bg-primary/20"
               >
                 <i class="bi bi-plus"></i>
               </button>
@@ -142,21 +153,17 @@
               <li
                 v-for="ri in recipe.recipeIngredients"
                 :key="ri.id"
-                class="flex items-center justify-between rounded-lg bg-surface px-4 py-2.5"
+                class="flex items-center justify-between bg-surface px-4 py-2.5"
               >
                 <span class="font-medium text-ink">{{ ri.ingredient.name }}</span>
-                <span class="text-sm text-ink/60">{{ calculateAdjustedQuantity(ri.quantity) }} {{ ri.unit }}</span>
+                <span class="text-sm text-ink/60">
+                  <span v-if="adjustedServings !== recipe.servingSize">≈ </span>{{ calculateAdjustedQuantity(ri.quantity) }} {{ ri.unit }}
+                </span>
               </li>
             </ul>
           </div>
           <p v-else class="text-sm text-ink/50 italic">No ingredients listed.</p>
         </div>
-      </div>
-
-      <div class="mt-6 rounded-2xl bg-surface p-4 text-center text-xs text-ink/50">
-        <span>Created: {{ formatDate(recipe.createdAt) }}</span>
-        <span class="mx-3">•</span>
-        <span>Updated: {{ formatDate(recipe.updatedAt) }}</span>
       </div>
     </div>
   </div>

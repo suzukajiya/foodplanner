@@ -56,6 +56,7 @@ export interface CreateRecipeRequest {
 
 export interface Recipe {
   id: string
+  code?: string
   name: string
   description?: string
   author?: string

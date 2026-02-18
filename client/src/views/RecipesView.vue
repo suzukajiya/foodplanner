@@ -7,18 +7,18 @@
       </RouterLink>
     </div>
 
-    <div v-if="loading" class="rounded-3xl bg-white p-12 text-center shadow-soft">
+    <div v-if="loading" class="bg-white p-12 text-center shadow-soft">
       <i class="bi bi-hourglass-split text-3xl text-primary/50"></i>
       <p class="mt-4 text-ink/60">Loading recipes...</p>
     </div>
 
-    <div v-else-if="error" class="rounded-3xl bg-white p-8 shadow-soft">
+    <div v-else-if="error" class="bg-white p-8 shadow-soft">
       <p class="text-sm text-red-600">
         <i class="bi bi-exclamation-triangle mr-2"></i>{{ error }}
       </p>
     </div>
 
-    <div v-else-if="recipes.length === 0" class="rounded-3xl bg-white p-12 text-center shadow-soft">
+    <div v-else-if="recipes.length === 0" class="bg-white p-12 text-center shadow-soft">
       <i class="bi bi-inbox text-4xl text-primary/50"></i>
       <p class="mt-4 text-lg text-ink/70">No recipes yet</p>
       <p class="mt-2 text-sm text-ink/50">Start by adding your first recipe!</p>
@@ -27,11 +27,11 @@
       </RouterLink>
     </div>
 
-    <div v-else class="space-y-3">
+    <div v-else class="grid lg:grid-cols-2 gap-4">
       <div
         v-for="recipe in recipes"
         :key="recipe.id"
-        class="flex items-center justify-between rounded-2xl border border-primary/10 bg-white px-6 py-4 shadow-sm transition hover:border-primary/30 hover:shadow-soft"
+        class="flex items-center justify-between rounded-md border border-primary/10 bg-white px-6 py-4 shadow-sm transition hover:border-primary/30 hover:shadow-soft"
       >
         <RouterLink
           :to="`/recipes/${recipe.id}`"
@@ -41,7 +41,10 @@
             <i class="bi bi-journal-text text-lg text-primary"></i>
           </div>
           <div>
-            <h3 class="text-lg font-medium text-ink">{{ recipe.name }}</h3>
+            <div class="flex items-center gap-2">
+              <h3 class="text-xl font-medium text-ink">{{ recipe.name }}</h3>
+              <span v-if="recipe.code" class="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-semibold tracking-wider text-primary">#{{ recipe.code }}</span>
+            </div>
             <div class="mt-1 flex items-center gap-3 text-xs text-ink/60">
               <span><i class="bi bi-tag mr-1"></i>{{ formatEnum(recipe.type) }}</span>
               <span><i class="bi bi-speedometer2 mr-1"></i>{{ formatEnum(recipe.difficulty) }}</span>
@@ -53,7 +56,7 @@
         <button
           @click.stop="handleDelete(recipe.id, recipe.name)"
           :disabled="deletingId === recipe.id"
-          class="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
           :class="{ 'opacity-50 cursor-not-allowed': deletingId === recipe.id }"
         >
           <i class="bi bi-trash"></i>

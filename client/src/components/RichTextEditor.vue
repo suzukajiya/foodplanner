@@ -1,6 +1,6 @@
 <template>
   <div class="rich-text-editor">
-    <div v-if="editor" class="flex flex-wrap items-center gap-1 border-b border-primary/15 bg-surface/50 px-3 py-2 rounded-t-lg">
+    <div v-if="editor" class="flex flex-wrap items-center gap-1 border-b border-primary/15 bg-surface/50 px-3 py-2">
       <button
         type="button"
         @click="editor.chain().focus().toggleBold().run()"
@@ -103,7 +103,7 @@
 
     <EditorContent
       :editor="editor"
-      class="prose prose-sm max-w-none rounded-b-lg border border-t-0 border-primary/15 bg-white px-4 py-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+      class="prose prose-sm max-w-none border border-t-0 border-primary/15 bg-white px-4 py-3 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
     />
   </div>
 </template>
