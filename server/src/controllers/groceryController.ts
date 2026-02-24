@@ -3,6 +3,71 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const STATE_ID = 'default';
+
+export const getListState = async (req: Request, res: Response) => {
+  try {
+    const state = await prisma.groceryListState.findUnique({
+      where: { id: STATE_ID },
+      include: { entries: { include: { item: true } } }
+    });
+    if (!state) return res.json({ entries: [] });
+    res.json({ entries: state.entries });
+  } catch (error) {
+    console.error('Error fetching list state:', error);
+    res.status(500).json({ error: 'Failed to fetch list state' });
+  }
+};
+
+export const saveListState = async (req: Request, res: Response) => {
+  try {
+    const { entries } = req.body as {
+      entries: { itemId: string; quantity: number; note: string }[];
+    };
+
+    await prisma.$transaction(async (tx) => {
+      await tx.groceryListState.upsert({
+        where: { id: STATE_ID },
+        create: { id: STATE_ID },
+        update: {}
+      });
+
+      await tx.groceryListEntry.deleteMany({ where: { stateId: STATE_ID } });
+
+      if (entries && entries.length > 0) {
+        await tx.groceryListEntry.createMany({
+          data: entries.map(e => ({
+            stateId: STATE_ID,
+            itemId: e.itemId,
+            quantity: e.quantity,
+            note: e.note ?? ''
+          }))
+        });
+      }
+    });
+
+    const state = await prisma.groceryListState.findUnique({
+      where: { id: STATE_ID },
+      include: { entries: { include: { item: true } } }
+    });
+
+    res.json({ entries: state?.entries ?? [] });
+  } catch (error) {
+    console.error('Error saving list state:', error);
+    res.status(500).json({ error: 'Failed to save list state' });
+  }
+};
+
+export const resetListState = async (req: Request, res: Response) => {
+  try {
+    await prisma.groceryListEntry.deleteMany({ where: { stateId: STATE_ID } });
+    res.json({ entries: [] });
+  } catch (error) {
+    console.error('Error resetting list state:', error);
+    res.status(500).json({ error: 'Failed to reset list state' });
+  }
+};
+
 export const getAllGroceryItems = async (req: Request, res: Response) => {
   try {
     const items = await prisma.groceryItem.findMany({

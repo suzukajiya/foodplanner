@@ -29,7 +29,10 @@ export const groceryApi = {
   getById: (id: string) => api.get<GroceryItem>(`/grocery/${id}`),
   create: (data: CreateGroceryItemRequest) => api.post<GroceryItem>('/grocery', data),
   update: (id: string, data: Partial<CreateGroceryItemRequest>) => api.put<GroceryItem>(`/grocery/${id}`, data),
-  delete: (id: string) => api.delete(`/grocery/${id}`)
+  delete: (id: string) => api.delete(`/grocery/${id}`),
+  getListState: () => api.get<{ entries: { id: string; itemId: string; quantity: number; note: string; item: GroceryItem }[] }>('/grocery/list-state'),
+  saveListState: (entries: { itemId: string; quantity: number; note: string }[]) => api.post('/grocery/list-state', { entries }),
+  resetListState: () => api.delete('/grocery/list-state')
 }
 
 export default api

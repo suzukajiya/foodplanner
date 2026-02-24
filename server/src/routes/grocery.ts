@@ -4,10 +4,17 @@ import {
   getGroceryItemById,
   createGroceryItem,
   updateGroceryItem,
-  deleteGroceryItem
+  deleteGroceryItem,
+  getListState,
+  saveListState,
+  resetListState
 } from '../controllers/groceryController';
 
 const router = Router();
+
+router.get('/list-state', getListState);
+router.post('/list-state', saveListState);
+router.delete('/list-state', resetListState);
 
 router.get('/', getAllGroceryItems);
 router.get('/:id', getGroceryItemById);
