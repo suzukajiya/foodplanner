@@ -3,7 +3,7 @@
 
     <!-- Header -->
     <div class="mb-8 flex items-center justify-between">
-      <h1 class="text-4xl">Grocery List</h1>
+      <h1 class="hidden sm:block sm:text-2xl lg:text-4xl">Grocery List</h1>
       <div class="flex items-center gap-3">
         <button
           @click="sidebarOpen = !sidebarOpen"

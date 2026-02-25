@@ -3,19 +3,12 @@
     <nav class="sticky top-0 z-20 border-b border-primary/10 bg-white/95 backdrop-blur">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
-          <RouterLink to="/" class="inline-flex items-center gap-2 text-xl font-heading text-primary">
+          <RouterLink to="/" class="hidden lg:inline-flex items-center gap-2 text-xl font-heading text-primary">
             <i class="bi bi-calendar-heart"></i>
             FoodPlanner
           </RouterLink>
 
-          <div class="flex flex-wrap items-center gap-8">
-            <button
-              @click="inverted = !inverted"
-              class="text-ink/60 transition hover:text-primary"
-              :title="inverted ? 'Disable invert' : 'Invert colors'"
-            >
-              <i :class="inverted ? 'bi bi-circle-half' : 'bi bi-circle-half'"></i>
-            </button>
+          <div class="text-sm lg:text-base flex flex-wrap items-center gap-8">
             <RouterLink to="/" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
               Recipes
             </RouterLink>
