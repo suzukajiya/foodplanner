@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
     <div class="mb-8 flex items-center justify-between">
-      <h1 class="text-4xl">All Recipes</h1>
+      <h1 class="text-2xl lg:text-4xl">All Recipes</h1>
       <RouterLink to="/add-recipe" class="btn-primary">
         <i class="bi bi-plus-circle mr-2"></i>Add Recipe
       </RouterLink>

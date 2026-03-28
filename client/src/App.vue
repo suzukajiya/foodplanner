@@ -34,7 +34,7 @@
             FoodPlanner
           </RouterLink>
 
-          <div class="text-sm lg:text-base flex flex-wrap items-center gap-8">
+          <div class="text-sm lg:text-base flex flex-wrap items-center gap-5 lg:gap-8">
             <RouterLink to="/" class="font-medium text-ink/70 transition hover:text-primary" exact-active-class="text-primary">
               Recipes
             </RouterLink>

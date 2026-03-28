@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 
 const STATE_ID = 'default';
 
+const normalizeGroceryField = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
+
 export const getListState = async (req: Request, res: Response) => {
   try {
     const state = await prisma.groceryListState.findUnique({
@@ -71,7 +73,7 @@ export const resetListState = async (req: Request, res: Response) => {
 export const getAllGroceryItems = async (req: Request, res: Response) => {
   try {
     const items = await prisma.groceryItem.findMany({
-      orderBy: { name: 'asc' }
+      orderBy: [{ name: 'asc' }, { size: 'asc' }]
     });
     res.json(items);
   } catch (error) {
@@ -96,17 +98,27 @@ export const getGroceryItemById = async (req: Request, res: Response) => {
 
 export const createGroceryItem = async (req: Request, res: Response) => {
   try {
-    const { name, size } = req.body;
+    const name = normalizeGroceryField(req.body.name);
+    const size = normalizeGroceryField(req.body.size);
     if (!name) {
       return res.status(400).json({ error: 'Name is required' });
     }
+
+    const existing = await prisma.groceryItem.findFirst({
+      where: { name, size }
+    });
+
+    if (existing) {
+      return res.status(409).json({ error: 'A grocery item with this name and size already exists' });
+    }
+
     const item = await prisma.groceryItem.create({
-      data: { name, size: size || null }
+      data: { name, size }
     });
     res.status(201).json(item);
   } catch (error: any) {
     if (error.code === 'P2002') {
-      return res.status(409).json({ error: 'A grocery item with this name already exists' });
+      return res.status(409).json({ error: 'A grocery item with this name and size already exists' });
     }
     console.error('Error creating grocery item:', error);
     res.status(500).json({ error: 'Failed to create grocery item' });
@@ -116,24 +128,43 @@ export const createGroceryItem = async (req: Request, res: Response) => {
 export const updateGroceryItem = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, size } = req.body;
+    const { name: incomingName, size: incomingSize } = req.body;
 
     const existing = await prisma.groceryItem.findUnique({ where: { id } });
     if (!existing) {
       return res.status(404).json({ error: 'Grocery item not found' });
     }
 
+    const name = incomingName !== undefined ? normalizeGroceryField(incomingName) : existing.name;
+    const size = incomingSize !== undefined ? normalizeGroceryField(incomingSize) : existing.size;
+
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+
+    const duplicate = await prisma.groceryItem.findFirst({
+      where: {
+        name,
+        size,
+        NOT: { id }
+      }
+    });
+
+    if (duplicate) {
+      return res.status(409).json({ error: 'A grocery item with this name and size already exists' });
+    }
+
     const item = await prisma.groceryItem.update({
       where: { id },
       data: {
-        ...(name !== undefined && { name }),
-        ...(size !== undefined && { size: size || null })
+        ...(incomingName !== undefined && { name }),
+        ...(incomingSize !== undefined && { size })
       }
     });
     res.json(item);
   } catch (error: any) {
     if (error.code === 'P2002') {
-      return res.status(409).json({ error: 'A grocery item with this name already exists' });
+      return res.status(409).json({ error: 'A grocery item with this name and size already exists' });
     }
     console.error('Error updating grocery item:', error);
     res.status(500).json({ error: 'Failed to update grocery item' });

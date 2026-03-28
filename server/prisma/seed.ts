@@ -200,11 +200,15 @@ async function main() {
   ];
 
   for (const item of groceryItems) {
-    await prisma.groceryItem.upsert({
-      where: { name: item.name },
-      update: {},
-      create: item
+    const existingGroceryItem = await prisma.groceryItem.findFirst({
+      where: { name: item.name, size: item.size }
     });
+
+    if (!existingGroceryItem) {
+      await prisma.groceryItem.create({
+        data: item
+      });
+    }
   }
 
   console.log('Created grocery items');
@@ -214,7 +218,7 @@ async function main() {
 main()
   .catch((e) => {
     console.error(e);
-    process.exit(1);
+    throw e;
   })
   .finally(async () => {
     await prisma.$disconnect();

@@ -408,12 +408,18 @@ const handleSave = async () => {
       if (idx !== -1) items.value[idx] = res.data
       const sel = selections.value.get(editingId.value!)
       if (sel) selections.value.set(editingId.value!, { ...sel, item: res.data })
+      closeModals()
     } else {
       const res = await groceryApi.create(payload)
       items.value.push(res.data)
-      items.value.sort((a, b) => a.name.localeCompare(b.name))
+      items.value.sort((a, b) => {
+        const nameCompare = a.name.localeCompare(b.name)
+        if (nameCompare !== 0) return nameCompare
+        return (a.size || '').localeCompare(b.size || '')
+      })
+      form.value.name = ''
+      form.value.size = ''
     }
-    closeModals()
   } catch (err: any) {
     formError.value = err.response?.data?.error || 'Failed to save item'
   } finally {
