@@ -8,27 +8,22 @@
       </div>
     </div>
 
-    <!-- Setup Panel (shown when no plan active OR in manual mode) -->
-    <div v-if="showSetup || mode === 'manual'" class="space-y-6">
+    <!-- Setup Panel -->
+    <div v-if="showSetup" class="space-y-6">
 
-      <!-- Mode Toggle + View Saved Plan -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-1 rounded-lg border border-primary/15 bg-white p-1 shadow-sm w-fit">
-          <button
-            @click="setMode('auto')"
-            class="flex items-center gap-2 rounded-md px-5 py-2 text-sm font-medium transition"
-            :class="mode === 'auto' ? 'bg-primary text-white shadow-sm' : 'text-ink/60 hover:text-ink'"
-          >
-            <i class="bi bi-stars"></i>Automatic
-          </button>
-          <button
-            @click="setMode('manual')"
-            class="flex items-center gap-2 rounded-md px-5 py-2 text-sm font-medium transition"
-            :class="mode === 'manual' ? 'bg-primary text-white shadow-sm' : 'text-ink/60 hover:text-ink'"
-          >
-            <i class="bi bi-pencil-square"></i>Manual
-          </button>
+      <!-- Actions + View Saved Plan -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2 rounded-md border border-primary/15 bg-white px-4 py-2 text-sm text-ink/60 shadow-sm">
+          <i class="bi bi-stars text-primary"></i>
+          <span>Automatic generation is managed here.</span>
         </div>
+
+        <RouterLink
+          to="/"
+          class="flex items-center gap-2 rounded-md border border-primary/30 bg-white px-4 py-2 text-sm font-medium text-primary shadow-sm transition hover:bg-primary/5"
+        >
+          <i class="bi bi-pencil-square"></i>Open Manual Planner in Recipes
+        </RouterLink>
 
         <button
           v-if="generatedPlan && showSetup"
