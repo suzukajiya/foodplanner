@@ -222,7 +222,7 @@
                 :id="`ingredient-quantity-${index}`"
                 v-model.number="ingredient.quantity"
                 type="number"
-                step="1"
+                step="0.01"
                 placeholder=" "
                 required
                 class="peer block w-full appearance-none border-0 border-b-2 border-primary/25 bg-transparent px-0 pb-2.5 pt-4 text-sm text-ink focus:border-primary focus:outline-none focus:ring-0"
@@ -273,7 +273,7 @@
         <div v-else></div>
 
         <div class="flex gap-3">
-          <RouterLink :to="isEditMode ? `/recipes/${recipeId}` : '/recipes'" class="btn-secondary">
+          <RouterLink :to="isEditMode ? `/recipes/${recipeId}` : { name: 'recipes' }" class="btn-secondary">
             Cancel
           </RouterLink>
           <button
@@ -398,11 +398,6 @@ const handleSubmit = async () => {
     return
   }
 
-  if (formData.value.ingredients.length === 0) {
-    errorMessage.value = 'Please add at least one ingredient'
-    return
-  }
-
   isSubmitting.value = true
 
   try {
@@ -420,7 +415,7 @@ const handleSubmit = async () => {
       successMessage.value = 'Recipe created successfully!'
 
       setTimeout(() => {
-        router.push('/recipes')
+        router.push({ name: 'recipes' })
       }, 1500)
     }
   } catch (error: any) {
