@@ -18,7 +18,7 @@ export default {
       },
       fontFamily: {
         sans: ['Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        heading: ['Croissant One', 'serif'],
+        heading: ['Libre Baskerville', 'serif'],
       },
       boxShadow: {
         soft: '0 12px 35px -18px rgba(248, 63, 107, 0.55)',

@@ -9,7 +9,7 @@
       <div class="flex items-center gap-3">
         <button
           @click="sidebarOpen = true"
-          class="relative flex items-center gap-2 rounded-md border border-primary/30 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/5"
+          class="fixed bottom-4 right-4 z-40 flex items-center shadow-md gap-2 rounded-md border border-secondary bg-secondary px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium text-white transition"
         >
           <i class="bi bi-calendar-week"></i>
           <span>Weekly Plan</span>
@@ -42,8 +42,8 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-3 rounded-md border border-primary/10 bg-white px-6 py-4 shadow-sm md:grid-cols-3">
-        <div>
+      <div class="grid grid-cols-2 gap-3 rounded-md border border-primary/10 bg-white px-4 sm:px-6 py-4 shadow-sm md:grid-cols-3">
+        <div class="col-span-2">
           <label class="mb-1 block text-xs font-medium text-ink/60">Type</label>
           <select
             v-model="selectedTypeFilter"
@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-4 rounded-md border border-primary/10 bg-white px-6 py-4 shadow-sm">
+      <div class="flex flex-wrap items-center gap-4 rounded-md border border-primary/10 bg-white px-4 lg:px-6 py-4 shadow-sm">
         <span class="text-sm font-medium text-ink/70 whitespace-nowrap">
           <i class="bi bi-cup-straw mr-2 text-primary"></i>Meals Per Day
         </span>
@@ -86,7 +86,7 @@
           <label
             v-for="mealTime in allMealTimes"
             :key="mealTime"
-            class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-primary/25 bg-surface px-4 py-1.5 text-sm transition hover:border-primary hover:bg-primary/5"
+            class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-primary/25 bg-surface px-3 sm:px-4 py-1.5 text-sm transition hover:border-primary hover:bg-primary/5"
             :class="{ 'border-primary bg-primary/10': selectedMealTimes.includes(mealTime) }"
           >
             <input
@@ -131,14 +131,14 @@
       <p class="mt-2 text-sm text-ink/50">Try a different search term or adjust the dropdown filters.</p>
     </div>
 
-    <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div v-else class="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 xl:grid-cols-3">
       <div
         v-for="recipe in filteredRecipes"
         :key="recipe.id"
         class="rounded-md border bg-white shadow-sm transition-all"
         :class="isSelected(recipe.id) ? 'border-primary/40 ring-1 ring-primary/20' : 'border-primary/10 hover:border-primary/25 hover:shadow-soft'"
       >
-        <div class="flex items-start gap-3 p-4">
+        <div class="flex items-start gap-3 px-2 py-3 sm:p-4">
           <button
             @click="toggleRecipe(recipe)"
             class="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 transition-colors"
@@ -163,7 +163,7 @@
                 </span>
               </div>
 
-              <div class="mt-1 flex flex-wrap items-center gap-3 text-xs text-ink/60">
+              <div class="hidden sm:flex mt-1 flex-wrap items-center gap-3 text-xs text-ink/60">
                 <span><i class="bi bi-tag mr-1"></i>{{ formatEnum(recipe.type) }}</span>
                 <span><i class="bi bi-speedometer2 mr-1"></i>{{ formatEnum(recipe.difficulty) }}</span>
                 <span><i class="bi bi-currency-dollar mr-1"></i>{{ formatEnum(recipe.cost) }}</span>
@@ -173,7 +173,7 @@
           </div>
         </div>
 
-        <div class="space-y-3 border-t border-primary/10 p-4">
+        <div class="space-y-3 border-t border-primary/10 px-2 py-3 sm:p-4">
           <div
             class="flex flex-wrap items-center gap-2 transition-opacity"
             :class="isSelected(recipe.id) ? 'opacity-100' : 'opacity-45'"
@@ -184,7 +184,7 @@
               :disabled="!isSelected(recipe.id)"
               class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:bg-surface"
             >
-              <option value="">Select day…</option>
+              <option value="">Day</option>
               <option v-for="day in planDays" :key="day.day" :value="day.day">{{ day.dayLabel }}</option>
             </select>
 
@@ -194,14 +194,14 @@
               :disabled="!isSelected(recipe.id)"
               class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:bg-surface"
             >
-              <option value="">Select meal…</option>
+              <option value="">Time</option>
               <option v-for="mealTime in selectedMealTimes" :key="mealTime" :value="mealTime">{{ formatEnum(mealTime) }}</option>
             </select>
 
             <button
               @click="assignRecipeToDraft(recipe.id)"
               :disabled="!canAssignRecipe(recipe.id)"
-              class="btn-primary px-4 py-1.5 text-sm disabled:opacity-50"
+              class="btn-primary rounded rounded-xs px-3 sm:px-4 py-1.5 text-sm disabled:opacity-50"
             >
               Assign
             </button>
@@ -483,7 +483,6 @@ const toggleRecipe = (recipe: Recipe) => {
     draftMealTime: selectedMealTimes.value[0] ?? ''
   })
   selections.value = new Map(selections.value)
-  sidebarOpen.value = true
 }
 
 const updateDraftDay = (recipeId: string, day: DayOfWeek | '') => {
@@ -666,3 +665,11 @@ onMounted(async () => {
   await Promise.all([fetchRecipes(), loadCurrentPlan()])
 })
 </script>
+
+<style>
+@media (max-width: 640px) {
+  select:not([size]) {
+    padding-right: 1rem !important;
+  }
+}
+</style>
