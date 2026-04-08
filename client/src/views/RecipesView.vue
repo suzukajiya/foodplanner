@@ -3,7 +3,7 @@
     <div class="mb-8 flex flex-wrap items-start justify-between gap-4">
       <div>
         <h1 class="text-2xl lg:text-4xl">Recipes</h1>
-        <p class="mt-2 text-sm text-ink/55">Search recipes, choose meals per day, and build your weekly plan directly from here.</p>
+        <p class="mt-2 text-sm text-ink/60">Search recipes, choose meals per day, and build your weekly plan directly from here.</p>
       </div>
 
       <div class="flex items-center gap-3">
@@ -37,13 +37,13 @@
           />
         </div>
 
-        <div class="rounded-md border border-primary/15 bg-white px-4 py-2 text-sm text-ink/55 shadow-sm">
+        <div class="rounded-md border border-primary/15 bg-white px-4 py-2 text-sm text-ink/60 shadow-sm">
           {{ filteredRecipes.length }} recipes · {{ selectedRecipesCount }} selected
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 rounded-md border border-primary/10 bg-white px-4 sm:px-6 py-4 shadow-sm md:grid-cols-3">
-        <div class="col-span-2">
+        <div class="col-span-2 md:col-span-1">
           <label class="mb-1 block text-xs font-medium text-ink/60">Type</label>
           <select
             v-model="selectedTypeFilter"
@@ -182,7 +182,7 @@
               :value="getDraftDayValue(recipe.id)"
               @change="updateDraftDay(recipe.id, ($event.target as HTMLSelectElement).value as DayOfWeek | '')"
               :disabled="!isSelected(recipe.id)"
-              class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:bg-surface"
+              class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed"
             >
               <option value="">Day</option>
               <option v-for="day in planDays" :key="day.day" :value="day.day">{{ day.dayLabel }}</option>
@@ -192,7 +192,7 @@
               :value="getDraftMealValue(recipe.id)"
               @change="updateDraftMeal(recipe.id, ($event.target as HTMLSelectElement).value as MealTime | '')"
               :disabled="!isSelected(recipe.id)"
-              class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:bg-surface"
+              class="min-w-[7.5rem] rounded border border-primary/25 bg-white px-3 py-1.5 text-sm text-ink focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:cursor-not-allowed"
             >
               <option value="">Time</option>
               <option v-for="mealTime in selectedMealTimes" :key="mealTime" :value="mealTime">{{ formatEnum(mealTime) }}</option>
@@ -227,7 +227,7 @@
       </div>
     </div>
 
-    <Teleport to="body">
+    <Teleport to="#app-teleport-target">
       <div v-if="sidebarOpen" class="fixed inset-0 z-40 bg-black/30 lg:hidden" @click="sidebarOpen = false"></div>
 
       <div v-if="sidebarOpen" class="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col border-l border-primary/20 bg-white shadow-2xl">

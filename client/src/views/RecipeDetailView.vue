@@ -103,7 +103,7 @@
             </h2>
             <div
               v-if="recipe.description"
-              class="prose prose-sm max-w-none text-ink/80"
+              class="prose prose-sm max-w-none text-ink"
               v-html="recipe.description"
             ></div>
             <p v-else class="text-sm text-ink/50 italic">No instructions provided.</p>

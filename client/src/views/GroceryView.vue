@@ -128,7 +128,7 @@
     </div>
 
     <!-- Shopping List Sidebar -->
-    <Teleport to="body">
+    <Teleport to="#app-teleport-target">
       <Transition name="fade">
         <div v-if="sidebarOpen" class="fixed inset-0 z-40 bg-black/30 lg:hidden" @click="sidebarOpen = false" />
       </Transition>
@@ -151,7 +151,7 @@
               <p class="mt-3 text-sm text-ink/50">Check items in the catalogue to build your list</p>
             </div>
             <div v-else class="space-y-1">
-              <p v-for="line in generatedLines" :key="line" class="text-sm text-ink/80 font-mono leading-relaxed">{{ line }}</p>
+              <p v-for="line in generatedLines" :key="line" class="text-sm text-ink font-mono leading-relaxed">{{ line }}</p>
             </div>
           </div>
 
@@ -194,7 +194,7 @@
     </Teleport>
 
     <!-- Add / Edit Modal -->
-    <Teleport to="body">
+    <Teleport to="#app-teleport-target">
       <div v-if="showAddModal || showEditModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="closeModals"></div>
         <div class="relative w-full max-w-md rounded-xl bg-white shadow-xl">
@@ -227,7 +227,7 @@
             </div>
 
             <div v-if="form.name" class="rounded-md bg-primary/5 px-3 py-2 text-xs text-ink/60">
-              <span class="font-medium text-ink/80">Preview: </span>{{ previewLine }}
+              <span class="font-medium text-ink">Preview: </span>{{ previewLine }}
             </div>
 
             <div v-if="formError" class="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">

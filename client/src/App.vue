@@ -55,6 +55,8 @@
     <main class="pb-12">
       <RouterView />
     </main>
+
+    <div id="app-teleport-target"></div>
   </div>
 </template>
 
@@ -66,7 +68,7 @@ const UAT_PASSWORD = import.meta.env.VITE_UAT_PASSWORD as string | undefined
 console.log('[UAT] password env:', UAT_PASSWORD)
 const STORAGE_KEY = 'uat_unlocked'
 
-const inverted = ref(false)
+const inverted = ref(true)
 const passwordInput = ref('')
 const wrongPassword = ref(false)
 

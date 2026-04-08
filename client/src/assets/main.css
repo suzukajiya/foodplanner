@@ -30,3 +30,41 @@
     @apply inline-flex items-center justify-center rounded-full border border-primary/40 bg-white px-6 py-2.5 text-sm font-medium text-primary transition duration-200 hover:border-primary hover:bg-primary/5;
   }
 }
+
+body .inverted {
+  color: white
+}
+
+.inverted .text-ink {
+  @apply text-white;
+}
+
+.inverted .text-ink\/40 {
+  @apply text-white/40;
+}
+
+.inverted .text-ink\/50 {
+  @apply text-white/50;
+}
+
+.inverted .text-ink\/60 {
+  @apply text-white/60;
+}
+
+.inverted .text-ink\/70 {
+  @apply text-white/70;
+}
+
+.min-h-screen.bg-\[\#e4e4e4\].inverted {
+  @apply bg-[#222];
+}
+
+.inverted .bg-white,
+.inverted .bg-surface,
+.inverted .bg-white\/95 {
+  @apply bg-[#444];
+}
+
+.inverted input::placeholder {
+  @apply text-white/60;
+}
