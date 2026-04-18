@@ -4,6 +4,8 @@ export enum RecipeType {
   VEGETARIAN = 'VEGETARIAN',
   LENTIL = 'LENTIL',
   FISH = 'FISH',
+  RICE = 'RICE',
+  DESERT = 'DESERT',
   OTHER = 'OTHER'
 }
 

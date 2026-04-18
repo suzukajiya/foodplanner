@@ -13,6 +13,8 @@ enum RecipeType {
   VEGETARIAN
   LENTIL
   FISH
+  RICE
+  DESERT
   OTHER
 }
 

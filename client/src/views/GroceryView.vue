@@ -7,7 +7,7 @@
       <div class="flex items-center gap-3">
         <button
           @click="sidebarOpen = !sidebarOpen"
-          class="relative flex items-center gap-2 rounded-md border border-primary/30 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/5"
+          class="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-md border border-secondary bg-secondary px-4 py-2 text-sm font-medium text-white shadow-md transition md:px-6 md:py-3 md:text-base"
         >
           <i class="bi bi-cart3"></i>
           <span>Shopping List</span>
@@ -286,8 +286,8 @@ const filteredItems = computed(() => {
 const generatedLines = computed(() => {
   return Array.from(selections.value.values()).map(sel => {
     const parts: string[] = [sel.item.name]
-    parts.push(String(sel.quantity))
     if (sel.item.size) parts.push(sel.item.size)
+    parts.push(String('x' + sel.quantity))
     const line = parts.join(' - ')
     return sel.note ? `${line}  (${sel.note})` : line
   })

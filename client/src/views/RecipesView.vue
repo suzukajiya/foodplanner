@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="mb-8 flex flex-wrap items-start justify-between gap-4">
+  <div class="max-w-7xl mx-auto py-8 sm:px-4 lg:px-8">
+    <div class="mb-8 flex flex-wrap items-start justify-between gap-4 px-4 sm:px-0">
       <div>
         <h1 class="text-2xl lg:text-4xl">Recipes</h1>
         <p class="mt-2 text-sm text-ink/60">Search recipes, choose meals per day, and build your weekly plan directly from here.</p>
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="mb-6 space-y-4">
+    <div class="mb-6 space-y-4 px-4 sm:px-0">
       <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div class="relative flex-1">
           <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-ink/40"></i>
@@ -135,7 +135,7 @@
       <div
         v-for="recipe in filteredRecipes"
         :key="recipe.id"
-        class="rounded-md border bg-white shadow-sm transition-all"
+        class="sm:rounded-md sm:border bg-white sm:shadow-sm transition-all"
         :class="isSelected(recipe.id) ? 'border-primary/40 ring-1 ring-primary/20' : 'border-primary/10 hover:border-primary/25 hover:shadow-soft'"
       >
         <div class="flex items-start gap-3 px-2 py-3 sm:p-4">
@@ -278,15 +278,13 @@
               </div>
             </div>
           </template>
-        </div>
 
-        <div class="space-y-3 border-t border-primary/10 px-5 py-4">
           <p v-if="saveMessage" class="text-sm" :class="saveMessageError ? 'text-red-600' : 'text-green-600'">
             <i class="bi mr-1" :class="saveMessageError ? 'bi-exclamation-circle' : 'bi-check-circle'"></i>{{ saveMessage }}
           </p>
 
           <div class="grid grid-cols-2 gap-2">
-            <button @click="resetPlanBuilder" class="btn-secondary text-sm">Reset</button>
+            <button @click="resetPlanBuilder" :disabled="isSaving" class="btn-secondary text-sm disabled:opacity-50">Reset</button>
             <button
               @click="handleSavePlan"
               :disabled="isSaving || filledSlotsCount === 0 || selectedMealTimes.length === 0"
@@ -545,10 +543,21 @@ const assignRecipeToDraft = (recipeId: string) => {
 const buildPlanPayload = () =>
   previewPlan.value.filter(day => day.meals.length > 0)
 
-const resetPlanBuilder = () => {
-  selections.value = new Map()
+const resetPlanBuilder = async () => {
+  isSaving.value = true
   saveMessage.value = ''
   saveMessageError.value = false
+
+  try {
+    await weeklyPlanApi.resetCurrent()
+    selections.value = new Map()
+    saveMessage.value = 'Plan reset successfully!'
+  } catch (err: any) {
+    saveMessage.value = err.response?.data?.error || 'Failed to reset plan'
+    saveMessageError.value = true
+  } finally {
+    isSaving.value = false
+  }
 }
 
 const handleSavePlan = async () => {

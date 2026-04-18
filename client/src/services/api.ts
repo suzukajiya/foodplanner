@@ -21,7 +21,8 @@ export const recipeApi = {
 export const weeklyPlanApi = {
   generate: (data: GeneratePlanRequest) => api.post<GeneratePlanResponse>('/weekly-plan/generate', data),
   save: (plan: any) => api.post('/weekly-plan/save', { plan }),
-  getCurrent: () => api.get('/weekly-plan/current')
+  getCurrent: () => api.get('/weekly-plan/current'),
+  resetCurrent: () => api.delete('/weekly-plan/current')
 }
 
 export const groceryApi = {

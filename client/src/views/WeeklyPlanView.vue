@@ -242,7 +242,7 @@
               <i class="bi mr-1" :class="saveMessage.startsWith('Error') ? 'bi-exclamation-circle' : 'bi-check-circle'"></i>{{ saveMessage }}
             </p>
             <div class="flex gap-2 ml-auto">
-              <button @click="resetManualPlan" class="btn-secondary text-sm"><i class="bi bi-arrow-counterclockwise mr-1"></i>Reset Plan</button>
+              <button @click="resetManualPlan" :disabled="isSaving" class="btn-secondary text-sm disabled:opacity-50"><i class="bi bi-arrow-counterclockwise mr-1"></i>Reset Plan</button>
               <button @click="handleManualSave" :disabled="isSaving || manualPlanSlotCount === 0" class="btn-primary text-sm disabled:opacity-50">
                 <i v-if="isSaving" class="bi bi-hourglass-split mr-1 animate-spin"></i>
                 <i v-else class="bi bi-floppy mr-1"></i>
@@ -733,13 +733,24 @@ const removeManualEntry = (day: string, mealTime: MealTime) => {
   manualPlanEntries.value = new Map(manualPlanEntries.value)
 }
 
-const resetManualPlan = () => {
-  manualPlanEntries.value = new Map()
-  manualSelectedRecipe.value = null
-  manualSearch.value = ''
-  manualResults.value = []
-  manualSearchDone.value = false
+const resetManualPlan = async () => {
+  isSaving.value = true
   saveMessage.value = ''
+
+  try {
+    await weeklyPlanApi.resetCurrent()
+    manualPlanEntries.value = new Map()
+    manualSelectedRecipe.value = null
+    manualSearch.value = ''
+    manualResults.value = []
+    manualSearchDone.value = false
+    generatedPlan.value = null
+    saveMessage.value = 'Plan reset successfully!'
+  } catch (err: any) {
+    saveMessage.value = 'Error: ' + (err.response?.data?.error || 'Failed to reset plan')
+  } finally {
+    isSaving.value = false
+  }
 }
 
 const handleManualSave = async () => {

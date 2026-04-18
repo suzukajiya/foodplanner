@@ -378,3 +378,18 @@ export const getCurrentPlan = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch current plan' });
   }
 };
+
+export const resetCurrentPlan = async (req: Request, res: Response) => {
+  try {
+    const weekStart = getWeekStartDate(new Date());
+
+    await prisma.weeklyPlan.deleteMany({
+      where: { weekStartDate: weekStart }
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error resetting current plan:', error);
+    res.status(500).json({ error: 'Failed to reset weekly plan' });
+  }
+};

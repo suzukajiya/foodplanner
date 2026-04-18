@@ -68,7 +68,7 @@ const UAT_PASSWORD = import.meta.env.VITE_UAT_PASSWORD as string | undefined
 console.log('[UAT] password env:', UAT_PASSWORD)
 const STORAGE_KEY = 'uat_unlocked'
 
-const inverted = ref(true)
+const inverted = ref(false)
 const passwordInput = ref('')
 const wrongPassword = ref(false)
 
